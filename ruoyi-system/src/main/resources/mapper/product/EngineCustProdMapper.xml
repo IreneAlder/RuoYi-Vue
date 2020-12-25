@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.decision.product.mapper.EngineCustProdMapper">
+    
+    <resultMap type="EngineCustProd" id="EngineCustProdResult">
+        <result property="prodCode"    column="PROD_CODE"    />
+        <result property="prodName"    column="PROD_NAME"    />
+        <result property="paymentWay"    column="PAYMENT_WAY"    />
+        <result property="creditTerm"    column="CREDIT_TERM"    />
+        <result property="prodRate"    column="PROD_RATE"    />
+        <result property="effectDate"    column="EFFECT_DATE"    />
+        <result property="endDate"    column="END_DATE"    />
+        <result property="createDate"    column="CREATE_DATE"    />
+        <result property="lastUpdateDate"    column="LAST_UPDATE_DATE"    />
+    </resultMap>
+
+    <sql id="selectEngineCustProdVo">
+        select PROD_CODE, PROD_NAME, PAYMENT_WAY, CREDIT_TERM, PROD_RATE, EFFECT_DATE, END_DATE, CREATE_DATE, LAST_UPDATE_DATE from engine_cust_prod
+    </sql>
+
+    <select id="selectEngineCustProdList" parameterType="EngineCustProd" resultMap="EngineCustProdResult">
+        <include refid="selectEngineCustProdVo"/>
+        <where>  
+            <if test="prodCode != null  and prodCode != ''"> and PROD_CODE = #{prodCode}</if>
+            <if test="prodName != null  and prodName != ''"> and PROD_NAME like concat('%', #{prodName}, '%')</if>
+            <if test="paymentWay != null  and paymentWay != ''"> and PAYMENT_WAY = #{paymentWay}</if>
+            <if test="effectDate != null "> and EFFECT_DATE = #{effectDate}</if>
+            <if test="endDate != null "> and END_DATE = #{endDate}</if>
+        </where>
+    </select>
+    
+    <select id="selectEngineCustProdById" parameterType="String" resultMap="EngineCustProdResult">
+        <include refid="selectEngineCustProdVo"/>
+        where PROD_CODE = #{prodCode}
+    </select>
+        
+    <insert id="insertEngineCustProd" parameterType="EngineCustProd">
+        insert into engine_cust_prod
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="prodCode != null">PROD_CODE,</if>
+            <if test="prodName != null and prodName != ''">PROD_NAME,</if>
+            <if test="paymentWay != null and paymentWay != ''">PAYMENT_WAY,</if>
+            <if test="creditTerm != null">CREDIT_TERM,</if>
+            <if test="prodRate != null">PROD_RATE,</if>
+            <if test="effectDate != null">EFFECT_DATE,</if>
+            <if test="endDate != null">END_DATE,</if>
+            <if test="createDate != null">CREATE_DATE,</if>
+            <if test="lastUpdateDate != null">LAST_UPDATE_DATE,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="prodCode != null">#{prodCode},</if>
+            <if test="prodName != null and prodName != ''">#{prodName},</if>
+            <if test="paymentWay != null and paymentWay != ''">#{paymentWay},</if>
+            <if test="creditTerm != null">#{creditTerm},</if>
+            <if test="prodRate != null">#{prodRate},</if>
+            <if test="effectDate != null">#{effectDate},</if>
+            <if test="endDate != null">#{endDate},</if>
+            <if test="createDate != null">#{createDate},</if>
+            <if test="lastUpdateDate != null">#{lastUpdateDate},</if>
+         </trim>
+    </insert>
+
+    <update id="updateEngineCustProd" parameterType="EngineCustProd">
+        update engine_cust_prod
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="prodName != null and prodName != ''">PROD_NAME = #{prodName},</if>
+            <if test="paymentWay != null and paymentWay != ''">PAYMENT_WAY = #{paymentWay},</if>
+            <if test="creditTerm != null">CREDIT_TERM = #{creditTerm},</if>
+            <if test="prodRate != null">PROD_RATE = #{prodRate},</if>
+            <if test="effectDate != null">EFFECT_DATE = #{effectDate},</if>
+            <if test="endDate != null">END_DATE = #{endDate},</if>
+            <if test="createDate != null">CREATE_DATE = #{createDate},</if>
+            <if test="lastUpdateDate != null">LAST_UPDATE_DATE = #{lastUpdateDate},</if>
+        </trim>
+        where PROD_CODE = #{prodCode}
+    </update>
+
+    <delete id="deleteEngineCustProdById" parameterType="String">
+        delete from engine_cust_prod where PROD_CODE = #{prodCode}
+    </delete>
+
+    <delete id="deleteEngineCustProdByIds" parameterType="String">
+        delete from engine_cust_prod where PROD_CODE in 
+        <foreach item="prodCode" collection="array" open="(" separator="," close=")">
+            #{prodCode}
+        </foreach>
+    </delete>
+    
+</mapper>
