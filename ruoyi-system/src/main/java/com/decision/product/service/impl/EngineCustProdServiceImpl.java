@@ -11,7 +11,7 @@ import com.decision.product.service.IEngineCustProdService;
  * 客户产品信息Service业务层处理
  * 
  * @author lyy
- * @date 2020-12-25
+ * @date 2020-12-28
  */
 @Service
 public class EngineCustProdServiceImpl implements IEngineCustProdService 
@@ -22,13 +22,13 @@ public class EngineCustProdServiceImpl implements IEngineCustProdService
     /**
      * 查询客户产品信息
      * 
-     * @param prodCode 客户产品信息ID
+     * @param id 客户产品信息ID
      * @return 客户产品信息
      */
     @Override
-    public EngineCustProd selectEngineCustProdById(String prodCode)
+    public EngineCustProd selectEngineCustProdById(String id)
     {
-        return engineCustProdMapper.selectEngineCustProdById(prodCode);
+        return engineCustProdMapper.selectEngineCustProdById(id);
     }
 
     /**
@@ -70,24 +70,24 @@ public class EngineCustProdServiceImpl implements IEngineCustProdService
     /**
      * 批量删除客户产品信息
      * 
-     * @param prodCodes 需要删除的客户产品信息ID
+     * @param ids 需要删除的客户产品信息ID
      * @return 结果
      */
     @Override
-    public int deleteEngineCustProdByIds(String[] prodCodes)
+    public int deleteEngineCustProdByIds(String[] ids)
     {
-        return engineCustProdMapper.deleteEngineCustProdByIds(prodCodes);
+        return engineCustProdMapper.deleteEngineCustProdByIds(ids);
     }
 
     /**
      * 删除客户产品信息信息
      * 
-     * @param prodCode 客户产品信息ID
+     * @param id 客户产品信息ID
      * @return 结果
      */
     @Override
-    public int deleteEngineCustProdById(String prodCode)
+    public int deleteEngineCustProdById(String id)
     {
-        return engineCustProdMapper.deleteEngineCustProdById(prodCode);
+        return engineCustProdMapper.deleteEngineCustProdById(id);
     }
 }

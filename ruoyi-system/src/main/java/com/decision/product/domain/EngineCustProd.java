@@ -11,11 +11,14 @@ import com.ruoyi.common.core.domain.BaseEntity;
  * 客户产品信息对象 engine_cust_prod
  * 
  * @author lyy
- * @date 2020-12-25
+ * @date 2020-12-28
  */
 public class EngineCustProd extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
+
+    /** 主键 */
+    private String id;
 
     /** 产品CODE */
     @Excel(name = "产品CODE")
@@ -57,6 +60,15 @@ public class EngineCustProd extends BaseEntity
     @Excel(name = "最后一次修改时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date lastUpdateDate;
 
+    public void setId(String id) 
+    {
+        this.id = id;
+    }
+
+    public String getId() 
+    {
+        return id;
+    }
     public void setProdCode(String prodCode) 
     {
         this.prodCode = prodCode;
@@ -142,6 +154,7 @@ public class EngineCustProd extends BaseEntity
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
+            .append("id", getId())
             .append("prodCode", getProdCode())
             .append("prodName", getProdName())
             .append("paymentWay", getPaymentWay())

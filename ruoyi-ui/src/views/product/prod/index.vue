@@ -27,14 +27,14 @@
           placeholder="选择生效日期">
         </el-date-picker>
       </el-form-item>
-      <el-form-item label="失效日期" prop="endDate">
+      <!-- <el-form-item label="失效日期" prop="endDate">
         <el-date-picker clearable size="small" style="width: 200px"
           v-model="queryParams.endDate"
           type="date"
           value-format="yyyy-MM-dd"
           placeholder="选择失效日期">
         </el-date-picker>
-      </el-form-item>
+      </el-form-item> -->
       <el-form-item>
         <el-button type="cyan" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -84,7 +84,8 @@
     </el-row>
 
     <el-table v-loading="loading" :data="prodList" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55" align="center" />
+      <!-- <el-table-column type="selection" width="55" align="center" /> -->
+      <!-- <el-table-column label="主键" align="center" prop="id" /> -->
       <el-table-column label="产品CODE" align="center" prop="prodCode" />
       <el-table-column label="产品名称" align="center" prop="prodName" />
       <el-table-column label="还款方式" align="center" prop="paymentWay" :formatter="paymentWayFormat" />
@@ -96,7 +97,7 @@
           <span>{{ parseTime(scope.row.endDate, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="创建日期" align="center" prop="createDate" width="180">
+      <!-- <el-table-column label="创建日期" align="center" prop="createDate" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.createDate, '{y}-{m}-{d}') }}</span>
         </template>
@@ -105,7 +106,7 @@
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.lastUpdateDate, '{y}-{m}-{d}') }}</span>
         </template>
-      </el-table-column>
+      </el-table-column> -->
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -137,6 +138,9 @@
     <!-- 添加或修改客户产品信息对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
+        <el-form-item label="产品CODE" prop="prodCode">
+          <el-input v-model="form.prodCode" placeholder="请输入产品CODE" />
+        </el-form-item>
         <el-form-item label="产品名称" prop="prodName">
           <el-input v-model="form.prodName" placeholder="请输入产品名称" />
         </el-form-item>
@@ -163,7 +167,15 @@
         <el-form-item label="产品日利率" prop="prodRate">
           <el-input v-model="form.prodRate" placeholder="请输入产品日利率" />
         </el-form-item>
-        <el-form-item label="失效日期" prop="endDate">
+        <el-form-item label="生效日期" prop="effectDate">
+          <el-date-picker clearable size="small" style="width: 200px"
+            v-model="form.effectDate"
+            type="date"
+            value-format="yyyy-MM-dd"
+            placeholder="选择失效日期">
+          </el-date-picker>
+        </el-form-item>
+        <el-form-item label="生效日期" prop="endDate">
           <el-date-picker clearable size="small" style="width: 200px"
             v-model="form.endDate"
             type="date"
@@ -225,6 +237,9 @@ export default {
       form: {},
       // 表单校验
       rules: {
+        id: [
+          { required: true, message: "主键不能为空", trigger: "blur" }
+        ],
         prodCode: [
           { required: true, message: "产品CODE不能为空", trigger: "blur" }
         ],
@@ -284,6 +299,7 @@ export default {
     // 表单重置
     reset() {
       this.form = {
+        id: null,
         prodCode: null,
         prodName: null,
         paymentWay: [],
@@ -308,7 +324,7 @@ export default {
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
-      this.ids = selection.map(item => item.prodCode)
+      this.ids = selection.map(item => item.id)
       this.single = selection.length!==1
       this.multiple = !selection.length
     },
@@ -321,8 +337,8 @@ export default {
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
-      const prodCode = row.prodCode || this.ids
-      getProd(prodCode).then(response => {
+      const id = row.id || this.ids
+      getProd(id).then(response => {
         this.form = response.data;
         this.form.paymentWay = this.form.paymentWay.split(",");
         this.open = true;
@@ -334,7 +350,7 @@ export default {
       this.$refs["form"].validate(valid => {
         if (valid) {
           this.form.paymentWay = this.form.paymentWay.join(",");
-          if (this.form.prodCode != null) {
+          if (this.form.id != null) {
             updateProd(this.form).then(response => {
               this.msgSuccess("修改成功");
               this.open = false;
@@ -352,13 +368,13 @@ export default {
     },
     /** 删除按钮操作 */
     handleDelete(row) {
-      const prodCodes = row.prodCode || this.ids;
-      this.$confirm('是否确认删除客户产品信息编号为"' + prodCodes + '"的数据项?', "警告", {
+      const ids = row.id || this.ids;
+      this.$confirm('是否确认删除客户产品信息编号为"' + ids + '"的数据项?', "警告", {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
           type: "warning"
         }).then(function() {
-          return delProd(prodCodes);
+          return delProd(ids);
         }).then(() => {
           this.getList();
           this.msgSuccess("删除成功");
